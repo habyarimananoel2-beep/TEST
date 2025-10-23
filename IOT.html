@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT MONITORING</title>
+     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" >
+</head>
+<h2 class="font-bold text-center">IOT MONITOR</h2>
+<body>
+   <form action="noel.php" method="post">
+        <div class=" mt-14 bg-blue-500 p-6 rounded-lg text-center">
+
+        <label for="temperature"class= "font-bold">temperature</label><br>
+         <input type="number" id="n" name="temperature"  placeholder="temperature"  class="rounded-xl"><br><br>
+ <label for="humidity" class= "font-bold">humidity</label><br>
+        <input type="number" id="humidity" name="humidity" placeholder="humidity" class="rounded-xl"><br><br>
+       <label for="sensorValue"class="font-bold">sensorValue</label><br>
+        <input type="number" id="sensorValue" name="sensorValue" placeholder="sensorValue" class="rounded-xl"><br><br>
+         
+          <button type="submit" name="send "  id="send" class="button p-3 bg-blue-800 rounded-xl">send</button>
+       </div>   
+    
+    </form>
+    
+</body>
+</html>
