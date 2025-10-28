@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Light Control & Energy Savings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    .component {
+      position: absolute;
+      min-width: 140px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .component:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+    
+    .power {
+      background: linear-gradient(135deg, #ff9999 0%, #ffcccc 100%);
+      color: #8b0000;
+    }
+    
+    .esp32 {
+      background: linear-gradient(135deg, #99ccff 0%, #cce6ff 100%);
+      color: #003d7a;
+    }
+    
+    .sensor {
+      background: linear-gradient(135deg, #99ff99 0%, #ccffcc 100%);
+      color: #006600;
+    }
+    
+    .load {
+      background: linear-gradient(135deg, #ffcc99 0%, #ffe6cc 100%);
+      color: #cc5200;
+    }
+    
+    .cloud {
+      background: linear-gradient(135deg, #cc99ff 0%, #e6ccff 100%);
+      color: #4d0099;
+    }
+    
+    .fade-in {
+      animation: fadeIn 1s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .slide-in {
+      animation: slideIn 0.8s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .hero-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+      animation: float 20s infinite linear;
+    }
+    
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-100px); }
+    }
+    
+    .feature-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1rem;
+    }
+    
+    code {
+      background: #f8f9fa;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #e83e8c;
+    }
+    
+    pre code {
+      display: block;
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: #2d3748;
+      color: #a0aec0;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-section text-white py-20 relative">
+    <div class="container mx-auto px-6 text-center relative z-10">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 fade-in">Smart Light Control & Energy Savings</h1>
+      <p class="text-xl md:text-2xl mb-8 opacity-90 slide-in">Building the Invisible Future with Embedded Systems & IoT</p>
+      
+    </div>
+  </section>
+
+  <!-- Project Overview -->
+  <section id="about" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">Project introduction</h2>
+        <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 shadow-xl">
+          <p class="text-lg text-gray-700 leading-relaxed mb-6">
+            This project is a <span class="font-bold text-purple-600">smart energy-saving lighting system</span> built using a  microcontroller, integrating motion detection, ambient light sensing, and current monitoring to automate and optimize bulb usage.
+          </p>
+          <p class="text-lg text-gray-700 leading-relaxed">
+            It connects to Wi-Fi and communicates with Ubidots to publish real-time data such as light status, current consumption, and energy saved, while also allowing remote manual control .The system uses a motion sensor to detect motion, an LDR to measure ambient light, and an current sensor to monitor current flow.
+          </p>
+        </div>
+        
+        <div class="mt-12 text-center italic text-gray-600 bg-gradient-to-r from-purple-100 to-blue-100 p-8 rounded-3xl shadow-lg">
+          <p class="text-lg leading-relaxed">
+            "In a world where technology is visible on every screen, true innovation often lies in what you don't see. Embedded systems and IoT are the quiet heartbeat of modern life—breathing intelligence into machines, cities, homes, and even our bodies."
+          </p>
+        </div>
+      </div>
+    </div>
+ 
+  <!-- Working Principle -->
+  <section id="working" class="py-20 bg-white text-gray-800">
+    <div class="container mx-auto px-6 ">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">Working Principle and techinical explaination</h2>
+        <div class="bg-white rounded-xl shadow-lg p-6 my-10">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Smart Light and Energy Savings System – Block Diagram</h2>
+  <p class="text-gray-700 mb-6 text-center">
+    This block diagram illustrates the architecture of a smart lighting system powered by an ESP32 microcontroller. It integrates a Light Dependent Resistor (LDR), motion sensor, and current sensor to automate lighting and track energy usage. Each of the four lamps (9W) is controlled via a switching module, enabling efficient energy management based on real-time environmental inputs.
+  </p>
+  <img src="C:\Users\dx\Pictures/block diagram_page-0001.jpg" alt="Smart Light Block Diagram" class="w-full h-auto object-contain rounded-lg border border-gray-300">
+
+    
+    
+
+      <p class="mt-4"><strong>✓ Light-dependent resistor (LDR)</strong>: This is a sensor that can tell how bright or dark it is in a room. Think of it like your eyes noticing when it’s getting dark.</p>
+
+      <p><strong>✓ Motion sensor</strong>: This sensor detects when someone moves in a room, like noticing if a person walks by.</p>
+
+      <p><strong>✓ Current sensor</strong>: This sensor keeps track of how much electricity is being used, like checking the electricity meter at home.</p>
+
+      <p><strong>✓ ESP32 microcontroller</strong>: This is the “brain” of the system. It looks at the information from the sensors and decides what to do, like turning lights on or off.</p>
+
+      <p><strong>✓ Power supply</strong>: This gives electricity to the brain (microcontroller) and the sensors so they can work, like plugging your devices into a wall socket.</p>
+
+      <p><strong>✓ Switching mode</strong>: This is like a small helper that actually turns each light on or off when the brain tells it to.</p>
+
+      <p><strong>✓ Lamps (lamp1, lamp2, lamp3, lamp4)</strong>: These are the lights that will turn on or off depending on the information from the sensors and instructions from the brain.</p>
+    
+  
+</div>
+
+
+       
+        
+    <div class="bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto text-center">
+    <h1 class="text-4xl font-bold text-gray-800 mb-6">
+      Smart Light Control Circuit Diagram
+    </h1>
+    <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 shadow-xl">
+          <p class="text-lg text-gray-700 leading-relaxed mb-6">
+      <p>
+        This smart light control circuit is designed to automate lighting based on motion and ambient light conditions. It uses an ESP32 microcontroller to process sensor inputs and control relays that switch 12V lamps on or off.
+      </p>
+      <p>
+        The system integrates a <strong>PIR sensor</strong> to detect motion and a <strong>Light Dependent Resistor (LDR)</strong> to measure brightness. When motion is detected and ambient light is low, the ESP32 activates the corresponding relay to power the lamp.
+      </p>
+      <p>
+        Each lamp (L1–L4) is controlled via a relay (RL1–RL4) and a transistor (Q1–Q4, BC548) acting as a switch. Diodes (D1–D4) protect the circuit from voltage spikes caused by relay switching. Resistors (R1–R5) ensure proper current flow and protect components.
+      </p>
+      <p>
+        The circuit also includes an <strong>ACS712 current sensor</strong> to monitor energy usage, making it suitable for energy-saving applications. The ESP32 receives inputs from sensors and sends control signals through its GPIO pins (D23, D22, D21, etc.).
+      </p>
+      <p>
+        This setup is ideal for smart home systems, allowing automated lighting that responds to environmental conditions and user presence, improving both convenience and energy efficiency.
+      </p>
+    </div>
+    <div class="rounded-lg shadow-lg overflow-hidden bg-white p-4 mb-6">
+      <img
+        src="C:/Users/dx/Pictures/smart light control and energy savings_page-0001.jpg"
+        alt="Smart Light Control Circuit"
+        class="w-full h-auto object-contain"
+      />
+    </div>
+    
+  </div>
+</div>
+ <div class="grid md:grid-cols-2 gap-8 mb-12">
+          <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-3xl shadow-lg">
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">Sensor Integration</h3>
+            <ul class="space-y-3 text-gray-700">
+              <li class="flex items-start gap-3">
+                <span class="text-2xl"></span>
+                <div>
+                  <strong>PIR Sensor:</strong> Detects motion to determine occupancy
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-2xl"></span>
+                <div>
+                  <strong>LDR Sensor:</strong> Measures ambient light levels
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-2xl"></span>
+                <div>
+                  <strong>ACS712:</strong> Monitors current flow and energy consumption
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-gradient-to-br from-green-50 to-teal-50 p-8 rounded-3xl shadow-lg">
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">Control Logic</h3>
+            <div class="bg-white p-6 rounded-xl font-mono text-sm text-gray-700">
+              <p class="mb-2"><span class="text-purple-600">IF</span> (Motion Detected)</p>
+              <p class="mb-2 ml-4"><span class="text-purple-600">AND</span> (Light Level &lt; Threshold)</p>
+              <p class="mb-2"><span class="text-green-600">THEN</span> Turn ON Bulb</p>
+              <p><span class="text-red-600">ELSE</span> Keep Bulb OFF</p>
+            </div>
+          </div>
+        </div>
+
+  </section>
+
+   
+
+  <!-- Components Gallery -->
+  <section id="components" class="py-20 bg-gradient-to-br from-purple-50 to-blue-50">
+    <div class="container mx-auto px-6"> 
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">documentation and working progress </h2>
+    </div>
+      <h2 class="text-3xl md:text-3xl font-bold text-center mb-16 text-gray-800 mt-4">System Components</h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <!-- ESP32 -->
+        <div class="feature-card card-hover">
+          <h3 class="text-xl font-bold text-center mb-3 text-gray-800">ESP32 Microcontroller</h3>
+          <p class="text-gray-600 text-center mb-4">Powerful microcontroller with built-in Wi-Fi and Bluetooth for IoT automation</p>
+          <img src="https://imgur.com/a/5KyHHTt" alt="ESP32" class="w-full h-48 object-contain rounded-lg">
+        </div>
+
+        <!-- PIR Sensor -->
+        <div class="feature-card card-hover">
+          <h3 class="text-xl font-bold text-center mb-3 text-gray-800">PIR Motion Sensor</h3>
+          <p class="text-gray-600 text-center mb-4">Detects motion by sensing infrared radiation for occupancy-based control</p>
+          <img src="https://imgur.com/a/SHAkLSm" alt="PIR" class="w-full h-48 object-contain rounded-lg">
+        </div>
+
+        <!-- LDR -->
+        <div class="feature-card card-hover">
+          <h3 class="text-xl font-bold text-center mb-3 text-gray-800">LDR Light Sensor</h3>
+          <p class="text-gray-600 text-center mb-4">Measures ambient light levels for intelligent lighting decisions</p>
+          <img src="https://imgur.com/249LsaQ" alt="LDR" class="w-full h-48 object-contain rounded-lg">
+        </div>
+
+        <!-- Current Sensor -->
+        <div class="feature-card card-hover">
+          <h3 class="text-xl font-bold text-center mb-3 text-gray-800">ACS712 Current Sensor</h3>
+          <p class="text-gray-600 text-center mb-4">Monitors current flow to track energy consumption</p>
+          <img src="https://imgur.com/jKpNfrf" alt="ACS712" class="w-full h-48 object-contain rounded-lg">
+        </div>
+
+        <!-- Relay Module -->
+        <div class="feature-card card-hover">
+          <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Relay Module</h3>
+          <p class="text-gray-600 text-center mb-4">Safely controls high-voltage devices like lamps</p>
+          <img src="https://imgur.com/IL4kf3f" alt="Relay" class="w-full h-48 object-contain rounded-lg">
+        </div>
+
+        <!-- Smart Bulb -->
+        <div class="feature-card card-hover">
+          <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Smart Lighting</h3>
+          <p class="text-gray-600 text-center mb-4">Energy-efficient LED bulbs controlled by the system</p>
+          <img src="https://imgur.com/MezVINe" alt="Bulb" class="w-full h-48 object-contain rounded-lg">
+        </div>
+
+        <div class="feature-card card-hover">
+            
+  <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Transistor</h3>
+  <p class="text-gray-600 text-center mb-4">Used as an electronic switch or amplifier for lighting control</p>
+  <img src="https://imgur.com/0YvGMOS" alt="Transistor" class="w-full h-48 object-contain rounded-lg">
+</div>
+
+<div class="feature-card card-hover">
+  <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Resistor</h3>
+  <p class="text-gray-600 text-center mb-4">Controls current flow and protects components in the circuit</p>
+  <img src="https://imgur.com/6L37IBY" alt="Resistor" class="w-full h-48 object-contain rounded-lg">
+</div>
+
+<div class="feature-card card-hover">
+  <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Flyback Diode</h3>
+  <p class="text-gray-600 text-center mb-4">Protects circuits from voltage spikes when switching inductive loads like relays or motors</p>
+  <img src="https://imgur.com/5E8e48X" alt="Flyback Diode" class="w-full h-48 object-contain rounded-lg">
+</div>
+
+<div class="feature-card card-hover">
+  <h3 class="text-xl font-bold text-center mb-3 text-gray-800">LED Indicators</h3>
+  <p class="text-gray-600 text-center mb-4">Display the operating status of the system through visual light signals</p>
+  <img src="https://imgur.com/RVAcMvl" alt="LED Indicators" class="w-full h-48 object-contain rounded-lg">
+</div>
+
+<div class="feature-card card-hover">
+  <h3 class="text-xl font-bold text-center mb-3 text-gray-800">Electrical Cable</h3>
+ <p class="text-gray-600 text-center mb-4">Carries electrical power or signals between components in the circuit</p>
+  <img src="https://imgur.com/7FnFESC" alt="Electrical Cable" class="w-full h-48 object-contain rounded-lg">
+</div>
+
+
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Implementation -->
+  <section id="implementation" class="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl md:text-3xl font-bold text-center mb-12 text-gray-800">Code Implementation</h2>
+      
+      <div class="max-w-5xl mx-auto space-y-8">
+        <!-- Global Declarations -->
+        <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+          <h3 class="text-2xl font-bold mb-4 text-purple-600">1. Global Declarations & Libraries</h3>
+          <pre><code>#include &lt;WiFi.h&gt;
+#include &lt;UbidotsEsp32Mqtt.h&gt;
+#define PIRPIN             27
+#define LDRPIN             34
+#define CURRENTSENSORPIN   35
+#define RELAY1_PIN         26
+#define RELAY2_PIN         25
+#define RELAY3_PIN         33
+#define RELAY4_PIN         32
+
+const int BULB_WATTAGE = 10;
+const int NUM_BULBS = 4;
+const int LIGHT_THRESHOLD = 500;</code></pre>
+        </div>
+
+        <!-- Setup Function -->
+        <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+          <h3 class="text-2xl font-bold mb-4 text-purple-600">2. Setup Configuration</h3>
+          <pre><code>void setup() {
+  Serial.begin(115200);
+  
+  pinMode(PIRPIN, INPUT);
+  pinMode(LDRPIN, INPUT);
+  pinMode(CURRENTSENSORPIN, INPUT);
+  
+  pinMode(RELAY1_PIN, OUTPUT);
+  pinMode(RELAY2_PIN, OUTPUT);
+  pinMode(RELAY3_PIN, OUTPUT);
+  pinMode(RELAY4_PIN, OUTPUT);
+  
+  digitalWrite(RELAY1_PIN, LOW);
+  digitalWrite(RELAY2_PIN, LOW);
+  digitalWrite(RELAY3_PIN, LOW);
+  digitalWrite(RELAY4_PIN, LOW);
+  
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println(" Connected!");
+}</code></pre>
+        </div>
+
+        <!-- Loop Function -->
+        <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+          <h3 class="text-2xl font-bold mb-4 text-purple-600">3. Main Control Loop</h3>
+          <pre><code>void loop() {
+  int motion = digitalRead(PIRPIN);
+  int lightLevel = analogRead(LDRPIN);
+  float current = readCurrent();
+  
+  if (forceOn) {
+    for (int i = 0; i &lt; 4; i++) {
+      if (!bulbOn[i]) {
+        controlBulb(i, true);
+      }
+    }
+  } else {
+    if (motion == HIGH && lightLevel &lt; LIGHT_THRESHOLD) {
+      for (int i = 0; i &lt; 4; i++) {
+        if (!bulbOn[i]) {
+          controlBulb(i, true);
+        }
+      }
+    } else {
+      for (int i = 0; i &lt; 4; i++) {
+        if (bulbOn[i]) {
+          controlBulb(i, false);
+        }
+      }
+    }
+  }
+  
+  delay(500);
+}</code></pre>
+        </div>
+
+        <!-- Custom Functions -->
+        <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+          <h3 class="text-2xl font-bold mb-4 text-purple-600">4. Custom Functions</h3>
+          <pre><code>void controlBulb(int index, bool state) {
+  int pins[] = {RELAY1_PIN, RELAY2_PIN, RELAY3_PIN, RELAY4_PIN};
+  digitalWrite(pins[index], state ? HIGH : LOW);
+  bulbOn[index] = state;
+}
+
+float readCurrent() {
+  int raw = analogRead(CURRENTSENSORPIN);
+  float voltage = (raw / 4095.0) * 3.3;
+  float offset = 3.3 / 2.0;
+  float sensitivity = 0.185;
+  float current = (voltage - offset) / sensitivity;
+  return abs(current);
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- IoT Dashboard -->
+  <section id="iot" class="py-20 bg-white">
+  <div class="container mx-auto px-6">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">IoT Dashboard & Monitoring</h2>
+
+    <div class="max-w-5xl mx-auto">
+      <div class="bg-gradient-to-br from-purple-50 to-blue-50 p-8 rounded-3xl shadow-xl mb-12">
+        <p class="text-lg text-gray-700 leading-relaxed text-center">
+          The system leverages MQTT protocol to communicate with Ubidots, enabling real-time monitoring, data visualization, and remote control capabilities. Users can track energy consumption, view system status, and manually override automation from anywhere in the world.
+        </p>
+      </div>
+
+      <div class="max-w-4xl mx-auto my-10 bg-white rounded-xl shadow-lg p-8">
+        <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">Code Compilation Demonstration</h3>
+        <div class="bg-gray-100 rounded-lg overflow-hidden">
+          <video width="100%" height="auto" controls class="w-full">
+            <source src="C:\Users\dx\Downloads/compile.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div class="max-w-4xl mx-auto my-10 bg-white rounded-xl shadow-lg p-8">
+        <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">Code uploading Demonstration</h3>
+        <div class="bg-gray-100 rounded-lg overflow-hidden">
+          <video width="100%" height="auto" controls class="w-full">
+            <source src="C:\Users\dx\Downloads/upload.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div class="bg-gray-50 py-10 px-4 sm:px-6 lg:px-8 rounded-3xl">
+        <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">Remote Monitoring – Feature Breakdown</h3>
+      <!-- Real-time Monitoring -->
+      <div class="bg-white rounded-3xl shadow-lg p-6 border-2 border-purple-100">
+        <h3 class="text-xl font-bold mb-4 text-center text-gray-800">Element of Ubidots Dashboard</h3>
+        <div class="space-y-6 text-gray-700">
+          <div>
+            <p><strong>✓ Light Status (ON/OFF):</strong> Displays the current state of each connected lamp. Helps users know which lights are active at any moment.</p>
+            <img src="C:/Users/dx/Pictures/lamp status.png" alt="Light Status" class="w-full h-48 object-contain rounded-lg mt-2">
+          </div>
+          <div>
+            <p><strong>✓ Current Consumption:</strong> Shows real-time electrical current usage for each lamp. Useful for tracking power draw and identifying high-consumption devices.</p>
+            <img src="C:/Users/dx/Pictures/current consumed.png" alt="Current Consumption" class="w-full h-48 object-contain rounded-lg mt-2">
+          </div>
+          <div>
+  <p><strong>✓ Motion Detection:</strong> Uses a PIR sensor to detect movement in the monitored area. When motion is detected, the system activates the corresponding light automatically, enhancing security and convenience.</p>
+  <img src="C:/Users/dx/Pictures/motion.png" alt="Motion Detection" class="w-full h-48 object-contain rounded-lg mt-2">
+</div>
+
+<div>
+  <p><strong>✓ Light Detection:</strong> Utilizes an LDR (Light Dependent Resistor) to measure ambient light levels. When the surrounding light falls below a certain threshold, the system automatically turns on the lights to maintain visibility and comfort.</p>
+  <img src="C:/Users/dx/Pictures/lightvalue.png" alt="Light Detection" class="w-full h-48 object-contain rounded-lg mt-2">
+</div>
+
+          <div>
+            <p><strong>✓ Manual Control Switches:</strong> Allows users to override automation and manually toggle lights on or off from the dashboard interface.</p>
+            <img src="C:/Users/dx/Pictures/manual switch.png" alt="Manual Switch" class="w-full h-48 object-contain rounded-lg mt-2">
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Cloud Features -->
+      <div class="bg-white rounded-3xl shadow-lg p-6 border-2 border-blue-100">
+        <h3 class="text-xl font-bold mb-4 text-center text-gray-800"> Cloud Features</h3>
+        <ul class="space-y-4 text-gray-700">
+          <li><strong>Remote Manual Override:</strong> Enables users to control lighting from anywhere using a cloud-connected interface—ideal for travel or remote access.</li>
+          <li><strong>Historical Data Analytics:</strong> Provides insights into usage patterns over time, helping optimize energy consumption and predict future needs.</li>
+          <li><strong>Real-time Alerts:</strong> Sends notifications for unusual activity, such as unexpected power spikes or motion detection when no one is home.</li>
+          <li><strong>Energy Efficiency Reports:</strong> Summarizes performance and savings, offering actionable recommendations to improve sustainability.</li>
+        </ul>
+      </div>
+
+    
+  </div>
+</div>
+
+
+              
+              
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-yellow-50 to-orange-50 p-8 rounded-3xl shadow-lg">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800 text-center">System Features</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="flex items-center gap-3 bg-white p-4 rounded-xl">
+              <span class="text-2xl">✓</span>
+              <span class="text-gray-700">Automatic motion detection</span>
+            </div>
+            <div class="flex items-center gap-3 bg-white p-4 rounded-xl">
+              <span class="text-2xl">✓</span>
+              <span class="text-gray-700">Ambient light sensing</span>
+            </div>
+            <div class="flex items-center gap-3 bg-white p-4 rounded-xl">
+              <span class="text-2xl">✓</span>
+              <span class="text-gray-700">Real-time current monitoring</span>
+            </div>
+            <div class="flex items-center gap-3 bg-white p-4 rounded-xl">
+              <span class="text-2xl">✓</span>
+              <span class="text-gray-700">Energy savings calculation</span>
+            </div>
+            <div class="flex items-center gap-3 bg-white p-4 rounded-xl">
+              <span class="text-2xl">✓</span>
+              <span class="text-gray-700">Remote control via Ubidots</span>
+            </div>
+            <div class="flex items-center gap-3 bg-white p-4 rounded-xl">
+              <span class="text-2xl">✓</span>
+              <span class="text-gray-700">Wi-Fi cloud connectivity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+            
+
+ <!-- Project Developers -->
+<section class="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+  <div class="container mx-auto px-6">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-800">Project Developers</h2>
+
+    <div class="max-w-5xl mx-auto space-y-8">
+      
+      <!-- Developer 1 -->
+      <div class="bg-white shadow-xl rounded-3xl overflow-hidden card-hover">
+        <div class="flex flex-col md:flex-row p-8 md:p-10 items-center">
+          <div class="w-40 h-40 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center text-white text-6xl font-bold mb-6 md:mb-0 md:mr-10 shadow-2xl">
+            NH
+          </div>
+          <div class="flex-1 text-center md:text-left">
+            <h3 class="text-3xl font-bold text-gray-800 mb-2">Habyarimana Noel</h3>
+            <p class="text-indigo-600 font-semibold text-xl mb-4">Project Developer & Electronics Specialist</p>
+            <p class="text-gray-600 leading-relaxed mb-6">
+              Specialist in Electronics and Telecommunication including IoT, Web Development, Embedded Systems, and Industrial Automation
+            </p>
+            <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-600 mb-6">
+              <div class="flex items-center gap-2">
+                <span class="text-indigo-500"></span>
+                <span><strong>Email:</strong> habyarimananoel2@gmail.com</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-indigo-500"></span>
+                <span><strong>Contact:</strong> +250 791 894 694</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-indigo-500"></span>
+                <span><strong>Address:</strong> Kigali, Rwanda</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Developer 2 -->
+      <div class="bg-white shadow-xl rounded-3xl overflow-hidden card-hover">
+        <div class="flex flex-col md:flex-row p-8 md:p-10 items-center">
+          <div class="w-40 h-40 rounded-full bg-gradient-to-br from-green-400 to-teal-600 flex items-center justify-center text-white text-6xl font-bold mb-6 md:mb-0 md:mr-10 shadow-2xl">
+            TR
+          </div>
+          <div class="flex-1 text-center md:text-left">
+            <h3 class="text-3xl font-bold text-gray-800 mb-2">Tuyishime Remy</h3>
+            <p class="text-green-600 font-semibold text-xl mb-4">Project Developer & Web Specialist</p>
+            <p class="text-gray-600 leading-relaxed mb-6">
+              Web Developer and Programmer in Electronics and Telecommunication with a passion for project innovation and inspiration
+            </p>
+            <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-600 mb-6">
+              <div class="flex items-center gap-2">
+                <span class="text-green-500"></span>
+                <span><strong>Email:</strong> remytuyishime58@gmail.com</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-green-500"></span>
+                <span><strong>Contact:</strong> +250 798 285 063</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-green-500"></span>
+                <span><strong>Address:</strong> Kigali, Rwanda</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-4">VTLABS Group</h3>
+          <p class="text-gray-400">Building the future with embedded systems and IoT solutions</p>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Contact</h4>
+          <div class="space-y-2 text-gray-400">
+            <p>vtlabsgroup@gmail.com</p>
+            <p>+250 798 285 063</p>
+            <p> +250 722 388 780</p>
+            <p> KN 193 St, Kigali, Rwanda</p>
+          </div>
+        </div>
+        
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 VTLABS Group. All rights reserved. | Smart Light Control & Energy Savings System</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = 'all 0.6s ease-out';
+      observer.observe(card);
+    });
+  </script>
+
+</body>
+</html>
