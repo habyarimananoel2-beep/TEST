@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Light Control & Energy Savings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      color: #f8fafc;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .component {
+      position: absolute;
+      min-width: 140px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .component:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+    
+    .power {
+      background: linear-gradient(135deg, #ff9999 0%, #ffcccc 100%);
+      color: #8b0000;
+    }
+    
+    .esp32 {
+      background: linear-gradient(135deg, #99ccff 0%, #cce6ff 100%);
+      color: #003d7a;
+    }
+    
+    .sensor {
+      background: linear-gradient(135deg, #99ff99 0%, #ccffcc 100%);
+      color: #006600;
+    }
+    
+    .load {
+      background: linear-gradient(135deg, #ffcc99 0%, #ffe6cc 100%);
+      color: #cc5200;
+    }
+    
+    .cloud {
+      background: linear-gradient(135deg, #cc99ff 0%, #e6ccff 100%);
+      color: #4d0099;
+    }
+    
+    .fade-in {
+      animation: fadeIn 1s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .slide-in {
+      animation: slideIn 0.8s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(20px);
+      background: rgba(15, 23, 42, 0.95);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .hero-section {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.05"/></svg>');
+      animation: float 20s infinite linear;
+    }
+    
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-100px); }
+    }
+    
+    .feature-card {
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      background: rgba(30, 41, 59, 1);
+    }
+    
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1rem;
+    }
+    
+    code {
+      background: #1e293b;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #f472b6;
+    }
+    
+    pre code {
+      display: block;
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: #0f172a;
+      color: #cbd5e1;
+      overflow-x: auto;
+      line-height: 1.6;
+      border: 1px solid #334155;
+    }
+    
+    /* New background styles */
+    .bg-section-light {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+    
+    .bg-section-dark {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+    
+    .bg-section-accent {
+      background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+    }
+    
+    .bg-card-gradient {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.9) 100%);
+    }
+    
+    .bg-card-accent {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(71, 85, 105, 0.9) 100%);
+    }
+    
+    .text-light {
+      color: #f8fafc;
+    }
+    
+    .text-muted {
+      color: #cbd5e1;
+    }
+    
+    .border-accent {
+      border-color: #475569;
+    }
+    
+    /* New styles for improved design */
+    .hero-glow {
+      position: relative;
+    }
+    
+    .hero-glow::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+      z-index: -1;
+    }
+    
+    .energy-saving-badge {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    
+    .light-bulb-icon {
+      color: #fbbf24;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    }
+    
+    .section-header {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-header::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: 2px;
+    }
+    
+    .iot-dashboard-preview {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .iot-dashboard-preview::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+    }
+    
+    .dashboard-widget {
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .dashboard-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #3b82f6;
+    }
+    
+    .dashboard-label {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+    }
+    
+    .energy-meter {
+      position: relative;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    
+    .energy-fill {
+      position: absolute;
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 4px;
+      width: 65%;
+    }
+    
+    .floating-light {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%);
+      filter: blur(10px);
+      animation: pulse 4s infinite alternate;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 0.7; transform: scale(1.2); }
+    }
+    
+    .light-beam {
+      position: absolute;
+      width: 2px;
+      height: 100px;
+      background: linear-gradient(to bottom, rgba(251, 191, 36, 0.8), transparent);
+      transform-origin: bottom center;
+    }
+    
+    .nav-link {
+      position: relative;
+      transition: color 0.3s;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #3b82f6;
+      transition: width 0.3s;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .stats-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.9) 100%);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stats-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stats-label {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body class="text-light">
+
+  <!-- Navigation -->
+  <nav class="py-4 px-6">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-lightbulb text-2xl text-yellow-400 mr-2"></i>
+        <span class="text-xl font-bold">SmartLight</span>
+      </div>
+      <div class="hidden md:flex space-x-8">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#working" class="nav-link">How It Works</a>
+        <a href="#components" class="nav-link">Components</a>
+        <a href="#implementation" class="nav-link">Code</a>
+        <a href="#iot" class="nav-link">Dashboard</a>
+      </div>
+      <div class="md:hidden">
+        <button class="text-white">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-section text-white py-20 relative overflow-hidden">
+    <div class="floating-light" style="top: 10%; left: 10%;"></div>
+    <div class="floating-light" style="top: 20%; right: 15%; animation-delay: 1s;"></div>
+    <div class="floating-light" style="bottom: 15%; left: 20%; animation-delay: 2s;"></div>
+    
+    <div class="container mx-auto px-6 text-center relative z-10 hero-glow">
+      <div class="energy-saving-badge mb-6 mx-auto">
+        <i class="fas fa-leaf"></i>
+        <span>Energy Efficient Solution</span>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 fade-in">Smart Light Control & Energy Savings</h1>
+      <p class="text-xl md:text-2xl mb-8 opacity-90 slide-in">Intelligent lighting that adapts to your environment and saves energy</p>
+      <div class="flex flex-col md:flex-row justify-center gap-4 mt-12">
+        <div class="stats-card">
+          <div class="stats-value">85%</div>
+          <div class="stats-label">Energy Savings</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-value">24/7</div>
+          <div class="stats-label">Automation</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-value">IoT</div>
+          <div class="stats-label">Connected</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Overview -->
+  <section id="about" class="py-20 bg-section-light">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 section-header">Project Introduction</h2>
+        <div class="bg-card-gradient rounded-3xl p-8 shadow-xl border border-accent">
+          <div class="flex items-start mb-6">
+            <i class="fas fa-lightbulb light-bulb-icon text-3xl mr-4 mt-1"></i>
+            <p class="text-lg leading-relaxed">
+              This project is a <span class="font-bold text-purple-400">smart energy-saving lighting system</span> built using a microcontroller, integrating motion detection, ambient light sensing, and current monitoring to automate and optimize bulb usage.
+            </p>
+          </div>
+          <div class="flex items-start">
+            <i class="fas fa-cloud text-3xl text-blue-400 mr-4 mt-1"></i>
+            <p class="text-lg leading-relaxed">
+              It connects to Wi-Fi and communicates with Ubidots to publish real-time data such as light status, current consumption, and energy saved, while also allowing remote manual control. The system uses a motion sensor to detect motion, an LDR to measure ambient light, and a current sensor to monitor current flow.
+            </p>
+          </div>
+        </div>
+        
+        <div class="mt-12 text-center italic text-muted bg-card-accent p-8 rounded-3xl shadow-lg border border-accent">
+          <i class="fas fa-quote-left text-2xl text-blue-400 mb-4 block"></i>
+          <p class="text-lg leading-relaxed">
+            "In a world where technology is visible on every screen, true innovation often lies in what you don't see. Embedded systems and IoT are the quiet heartbeat of modern life—breathing intelligence into machines, cities, homes, and even our bodies."
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Working Principle -->
+  <section id="working" class="py-20 bg-section-dark">
+    <div class="container mx-auto px-6">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 section-header">How It Works</h2>
+        <div class="feature-card card-hover">
+          <h2 class="text-2xl font-bold mb-4 text-center">Smart Light and Energy Savings System – Block Diagram</h2>
+          <p class="text-muted mb-6 text-center">
+            This block diagram illustrates the architecture of a smart lighting system powered by an ESP32 microcontroller. It integrates a Light Dependent Resistor (LDR), motion sensor, and current sensor to automate lighting and track energy usage. Each of the four lamps (9W) is controlled via a switching module, enabling efficient energy management based on real-time environmental inputs.
+          </p>
+          <div class="iot-dashboard-preview mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div class="dashboard-widget">
+                <div class="dashboard-value">ON</div>
+                <div class="dashboard-label">Light Status</div>
+              </div>
+              <div class="dashboard-widget">
+                <div class="dashboard-value">0.45A</div>
+                <div class="dashboard-label">Current</div>
+              </div>
+              <div class="dashboard-widget">
+                <div class="dashboard-value">YES</div>
+                <div class="dashboard-label">Motion</div>
+              </div>
+              <div class="dashboard-widget">
+                <div class="dashboard-value">LOW</div>
+                <div class="dashboard-label">Ambient Light</div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex justify-between text-sm">
+                <span>Energy Usage</span>
+                <span>65%</span>
+              </div>
+              <div class="energy-meter">
+                <div class="energy-fill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card card-hover mt-8">
+          <h3 class="text-xl font-bold mb-4 text-center">System Components Explained</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="flex items-start mb-3">
+              <i class="fas fa-sun text-yellow-400 mt-1 mr-3"></i>
+              <div>
+                <p class="font-semibold">Light-dependent resistor (LDR)</p>
+                <p class="text-sm text-muted">This sensor detects ambient light levels, similar to how our eyes adjust to darkness.</p>
+              </div>
+            </div>
+            <div class="flex items-start mb-3">
+              <i class="fas fa-walking text-green-400 mt-1 mr-3"></i>
+              <div>
+                <p class="font-semibold">Motion sensor</p>
+                <p class="text-sm text-muted">Detects movement in the room to activate lighting only when needed.</p>
+              </div>
+            </div>
+            <div class="flex items-start mb-3">
+              <i class="fas fa-bolt text-yellow-500 mt-1 mr-3"></i>
+              <div>
+                <p class="font-semibold">Current sensor</p>
+                <p class="text-sm text-muted">Monitors electricity consumption to track energy usage and savings.</p>
+              </div>
+            </div>
+            <div class="flex items-start mb-3">
+              <i class="fas fa-microchip text-blue-400 mt-1 mr-3"></i>
+              <div>
+                <p class="font-semibold">ESP32 microcontroller</p>
+                <p class="text-sm text-muted">The intelligent brain that processes sensor data and controls the system.</p>
+              </div>
+            </div>
+            <div class="flex items-start mb-3">
+              <i class="fas fa-plug text-gray-400 mt-1 mr-3"></i>
+              <div>
+                <p class="font-semibold">Power supply</p>
+                <p class="text-sm text-muted">Provides electricity to all components, similar to a wall socket.</p>
+              </div>
+            </div>
+            <div class="flex items-start mb-3">
+              <i class="fas fa-toggle-on text-purple-400 mt-1 mr-3"></i>
+              <div>
+                <p class="font-semibold">Switching mode</p>
+                <p class="text-sm text-muted">Electronically controls each light based on commands from the microcontroller.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Circuit Diagram Section -->
+  <section class="py-20 bg-section-light">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl font-bold mb-6 section-header">Smart Light Control Circuit</h1>
+      <div class="bg-card-gradient rounded-3xl p-8 shadow-xl border border-accent">
+        <p class="text-lg leading-relaxed mb-6">
+          This smart light control circuit is designed to automate lighting based on motion and ambient light conditions. It uses an ESP32 microcontroller to process sensor inputs and control relays that switch 12V lamps on or off.
+        </p>
+        <p class="text-lg leading-relaxed mb-6">
+          The system integrates a <strong>PIR sensor</strong> to detect motion and a <strong>Light Dependent Resistor (LDR)</strong> to measure brightness. When motion is detected and ambient light is low, the ESP32 activates the corresponding relay to power the lamp.
+        </p>
+        <div class="iot-dashboard-preview mb-6">
+          <div class="flex justify-center items-center h-64">
+            <div class="text-center">
+              <i class="fas fa-project-diagram text-6xl text-blue-400 mb-4"></i>
+              <p class="text-muted">Circuit Diagram Visualization</p>
+              <p class="text-sm text-muted mt-2">(Interactive circuit diagram would appear here)</p>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="bg-card-accent p-4 rounded-xl">
+            <i class="fas fa-microchip text-2xl text-blue-400 mb-2"></i>
+            <h4 class="font-bold">ESP32 Controller</h4>
+            <p class="text-sm text-muted">Processes all sensor data and controls relays</p>
+          </div>
+          <div class="bg-card-accent p-4 rounded-xl">
+            <i class="fas fa-sensor text-2xl text-green-400 mb-2"></i>
+            <h4 class="font-bold">Sensor Inputs</h4>
+            <p class="text-sm text-muted">Motion, light level, and current monitoring</p>
+          </div>
+          <div class="bg-card-accent p-4 rounded-xl">
+            <i class="fas fa-lightbulb text-2xl text-yellow-400 mb-2"></i>
+            <h4 class="font-bold">Light Control</h4>
+            <p class="text-sm text-muted">Relay-based control of up to 4 lamps</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Components Gallery -->
+  <section id="components" class="py-20 bg-section-accent">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 section-header">System Components</h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <!-- ESP32 -->
+        <div class="feature-card card-hover">
+          <div class="icon-circle bg-blue-500/20 text-blue-400">
+            <i class="fas fa-microchip"></i>
+          </div>
+          <h3 class="text-xl font-bold text-center mb-3">ESP32 Microcontroller</h3>
+          <p class="text-muted text-center mb-4">Powerful microcontroller with built-in Wi-Fi and Bluetooth for IoT automation</p>
+        </div>
+
+        <!-- PIR Sensor -->
+        <div class="feature-card card-hover">
+          <div class="icon-circle bg-green-500/20 text-green-400">
+            <i class="fas fa-walking"></i>
+          </div>
+          <h3 class="text-xl font-bold text-center mb-3">PIR Motion Sensor</h3>
+          <p class="text-muted text-center mb-4">Detects motion by sensing infrared radiation for occupancy-based control</p>
+        </div>
+
+        <!-- LDR -->
+        <div class="feature-card card-hover">
+          <div class="icon-circle bg-yellow-500/20 text-yellow-400">
+            <i class="fas fa-sun"></i>
+          </div>
+          <h3 class="text-xl font-bold text-center mb-3">LDR Light Sensor</h3>
+          <p class="text-muted text-center mb-4">Measures ambient light levels for intelligent lighting decisions</p>
+        </div>
+
+        <!-- Current Sensor -->
+        <div class="feature-card card-hover">
+          <div class="icon-circle bg-yellow-500/20 text-yellow-400">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="text-xl font-bold text-center mb-3">ACS712 Current Sensor</h3>
+          <p class="text-muted text-center mb-4">Monitors current flow to track energy consumption</p>
+        </div>
+
+        <!-- Relay Module -->
+        <div class="feature-card card-hover">
+          <div class="icon-circle bg-purple-500/20 text-purple-400">
+            <i class="fas fa-toggle-on"></i>
+          </div>
+          <h3 class="text-xl font-bold text-center mb-3">Relay Module</h3>
+          <p class="text-muted text-center mb-4">Safely controls high-voltage devices like lamps</p>
+        </div>
+
+        <!-- Smart Bulb -->
+        <div class="feature-card card-hover">
+          <div class="icon-circle bg-yellow-500/20 text-yellow-400">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <h3 class="text-xl font-bold text-center mb-3">Smart Lighting</h3>
+          <p class="text-muted text-center mb-4">Energy-efficient LED bulbs controlled by the system</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Implementation -->
+  <section id="implementation" class="py-20 bg-section-dark">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 section-header">Code Implementation</h2>
+      
+      <div class="max-w-5xl mx-auto space-y-8">
+        <!-- Global Declarations -->
+        <div class="feature-card card-hover">
+          <div class="flex items-center mb-4">
+            <i class="fas fa-code text-purple-400 text-xl mr-3"></i>
+            <h3 class="text-2xl font-bold text-purple-400">1. Global Declarations & Libraries</h3>
+          </div>
+          <pre><code>#include &lt;WiFi.h&gt;
+#include &lt;UbidotsEsp32Mqtt.h&gt;
+
+#define WIFI_SSID       "DESKTOP-JKNH2PT4993"
+#define WIFI_PASSWORD   "3D045@7s"
+
+#define UBIDOTS_TOKEN   "BBUS-H7akBGyO4ziOtg7Yc7yCdH7JDReNBi"
+#define DEVICE_LABEL    "smart_light"
+
+#define PIRPIN             27
+#define LDRPIN             34
+#define CURRENTSENSORPIN   35
+#define RELAY1_PIN         26
+#define RELAY2_PIN         25
+#define RELAY3_PIN         33
+#define RELAY4_PIN         32
+
+const int BULB_WATTAGE = 10;
+const int NUM_BULBS = 4;
+const int LIGHT_THRESHOLD = 500;</code></pre>
+        </div>
+
+        <!-- Setup Function -->
+        <div class="feature-card card-hover">
+          <div class="flex items-center mb-4">
+            <i class="fas fa-cog text-purple-400 text-xl mr-3"></i>
+            <h3 class="text-2xl font-bold text-purple-400">2. Setup Configuration</h3>
+          </div>
+          <pre><code>void setup() {
+  Serial.begin(115200);
+  
+  pinMode(PIRPIN, INPUT);
+  pinMode(LDRPIN, INPUT);
+  pinMode(CURRENTSENSORPIN, INPUT);
+  
+  pinMode(RELAY1_PIN, OUTPUT);
+  pinMode(RELAY2_PIN, OUTPUT);
+  pinMode(RELAY3_PIN, OUTPUT);
+  pinMode(RELAY4_PIN, OUTPUT);
+  
+  digitalWrite(RELAY1_PIN, LOW);
+  digitalWrite(RELAY2_PIN, LOW);
+  digitalWrite(RELAY3_PIN, LOW);
+  digitalWrite(RELAY4_PIN, LOW);
+  
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println(" Connected!");
+}</code></pre>
+        </div>
+
+        <!-- Loop Function -->
+        <div class="feature-card card-hover">
+          <div class="flex items-center mb-4">
+            <i class="fas fa-sync-alt text-purple-400 text-xl mr-3"></i>
+            <h3 class="text-2xl font-bold text-purple-400">3. Main Control Loop</h3>
+          </div>
+          <pre><code>void loop() {
+  int motion = digitalRead(PIRPIN);
+  int lightLevel = analogRead(LDRPIN);
+  float current = readCurrent();
+  
+  if (forceOn) {
+    for (int i = 0; i &lt; 4; i++) {
+      if (!bulbOn[i]) {
+        controlBulb(i, true);
+      }
+    }
+  } else {
+    if (motion == HIGH && lightLevel &lt; LIGHT_THRESHOLD) {
+      for (int i = 0; i &lt; 4; i++) {
+        if (!bulbOn[i]) {
+          controlBulb(i, true);
+        }
+      }
+    } else {
+      for (int i = 0; i &lt; 4; i++) {
+        if (bulbOn[i]) {
+          controlBulb(i, false);
+        }
+      }
+    }
+  }
+  
+  delay(500);
+}</code></pre>
+        </div>
+
+        <!-- Custom Functions -->
+        <div class="feature-card card-hover">
+          <div class="flex items-center mb-4">
+            <i class="fas fa-functions text-purple-400 text-xl mr-3"></i>
+            <h3 class="text-2xl font-bold text-purple-400">4. Custom Functions</h3>
+          </div>
+          <pre><code>void controlBulb(int index, bool state) {
+  int pins[] = {RELAY1_PIN, RELAY2_PIN, RELAY3_PIN, RELAY4_PIN};
+  digitalWrite(pins[index], state ? HIGH : LOW);
+  bulbOn[index] = state;
+}
+
+float readCurrent() {
+  int raw = analogRead(CURRENTSENSORPIN);
+  float voltage = (raw / 4095.0) * 3.3;
+  float offset = 3.3 / 2.0;
+  float sensitivity = 0.185;
+  float current = (voltage - offset) / sensitivity;
+  return abs(current);
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IoT Dashboard -->
+  <section id="iot" class="py-20 bg-section-light">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 section-header">IoT Dashboard & Monitoring</h2>
+
+      <div class="max-w-5xl mx-auto">
+        <div class="bg-card-gradient p-8 rounded-3xl shadow-xl mb-12 border border-accent">
+          <div class="flex items-center justify-center mb-4">
+            <i class="fas fa-cloud text-3xl text-blue-400 mr-3"></i>
+            <p class="text-lg leading-relaxed text-center">
+              The system leverages <strong>MQTT protocol</strong> to communicate with <strong>Ubidots</strong>, enabling real-time monitoring, data visualization, and remote control capabilities. Users can track energy consumption, view system status, and manually override automation from anywhere in the world.
+            </p>
+          </div>
+        </div>
+
+        <div class="iot-dashboard-preview mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-center">Live System Dashboard</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="dashboard-widget">
+              <div class="dashboard-value">ON</div>
+              <div class="dashboard-label">Light 1</div>
+            </div>
+            <div class="dashboard-widget">
+              <div class="dashboard-value">OFF</div>
+              <div class="dashboard-label">Light 2</div>
+            </div>
+            <div class="dashboard-widget">
+              <div class="dashboard-value">ON</div>
+              <div class="dashboard-label">Light 3</div>
+            </div>
+            <div class="dashboard-widget">
+              <div class="dashboard-value">OFF</div>
+              <div class="dashboard-label">Light 4</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="dashboard-widget">
+              <div class="dashboard-value">0.42A</div>
+              <div class="dashboard-label">Current Draw</div>
+            </div>
+            <div class="dashboard-widget">
+              <div class="dashboard-value">DETECTED</div>
+              <div class="dashboard-label">Motion</div>
+            </div>
+            <div class="dashboard-widget">
+              <div class="dashboard-value">LOW</div>
+              <div class="dashboard-label">Ambient Light</div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <div class="flex justify-between text-sm mb-2">
+              <span>Energy Saved Today</span>
+              <span>65%</span>
+            </div>
+            <div class="energy-meter">
+              <div class="energy-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-card-gradient py-10 px-4 sm:px-6 lg:px-8 rounded-3xl border border-accent">
+          <h3 class="text-3xl font-bold mb-6 text-center">Remote Monitoring – Feature Breakdown</h3>
+          
+          <!-- Real-time Monitoring -->
+          <div class="feature-card mb-8">
+            <h3 class="text-xl font-bold mb-4 text-center">Dashboard Elements</h3>
+            <div class="space-y-6 text-muted">
+              <div class="flex items-start">
+                <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                <div>
+                  <p><strong>Light Status (ON/OFF):</strong> Displays the current state of each connected lamp. Helps users know which lights are active at any moment.</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <i class="fas fa-bolt text-yellow-500 mt-1 mr-3"></i>
+                <div>
+                  <p><strong>Current Consumption:</strong> Shows real-time electrical current usage for each lamp. Useful for tracking power draw and identifying high-consumption devices.</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <i class="fas fa-walking text-green-400 mt-1 mr-3"></i>
+                <div>
+                  <p><strong>Motion Detection:</strong> Uses a PIR sensor to detect movement in the monitored area. When motion is detected, the system activates the corresponding light automatically.</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <i class="fas fa-sun text-yellow-400 mt-1 mr-3"></i>
+                <div>
+                  <p><strong>Light Detection:</strong> Utilizes an LDR to measure ambient light levels. When surrounding light falls below threshold, system turns on lights automatically.</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <i class="fas fa-toggle-on text-purple-400 mt-1 mr-3"></i>
+                <div>
+                  <p><strong>Manual Control Switches:</strong> Allows users to override automation and manually toggle lights on or off from the dashboard interface.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cloud Features -->
+          <div class="feature-card">
+            <h3 class="text-xl font-bold mb-4 text-center">Cloud Features</h3>
+            <ul class="space-y-4 text-muted">
+              <li class="flex items-start">
+                <i class="fas fa-mobile-alt text-blue-400 mt-1 mr-3"></i>
+                <span><strong>Remote Manual Override:</strong> Enables users to control lighting from anywhere using a cloud-connected interface.</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-chart-line text-green-400 mt-1 mr-3"></i>
+                <span><strong>Historical Data Analytics:</strong> Provides insights into usage patterns over time, helping optimize energy consumption.</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-bell text-red-400 mt-1 mr-3"></i>
+                <span><strong>Real-time Alerts:</strong> Sends notifications for unusual activity, such as unexpected power spikes.</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-file-alt text-indigo-400 mt-1 mr-3"></i>
+                <span><strong>Energy Efficiency Reports:</strong> Summarizes performance and savings, offering actionable recommendations.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-card-gradient p-8 rounded-3xl shadow-lg border border-accent mt-8">
+          <h3 class="text-2xl font-bold mb-6 text-center">System Features</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="flex items-center gap-3 bg-card-accent p-4 rounded-xl">
+              <i class="fas fa-walking text-green-400"></i>
+              <span class="text-muted">Automatic motion detection</span>
+            </div>
+            <div class="flex items-center gap-3 bg-card-accent p-4 rounded-xl">
+              <i class="fas fa-sun text-yellow-400"></i>
+              <span class="text-muted">Ambient light sensing</span>
+            </div>
+            <div class="flex items-center gap-3 bg-card-accent p-4 rounded-xl">
+              <i class="fas fa-bolt text-yellow-500"></i>
+              <span class="text-muted">Real-time current monitoring</span>
+            </div>
+            <div class="flex items-center gap-3 bg-card-accent p-4 rounded-xl">
+              <i class="fas fa-leaf text-green-500"></i>
+              <span class="text-muted">Energy savings calculation</span>
+            </div>
+            <div class="flex items-center gap-3 bg-card-accent p-4 rounded-xl">
+              <i class="fas fa-cloud text-blue-400"></i>
+              <span class="text-muted">Remote control via Ubidots</span>
+            </div>
+            <div class="flex items-center gap-3 bg-card-accent p-4 rounded-xl">
+              <i class="fas fa-wifi text-purple-400"></i>
+              <span class="text-muted">Wi-Fi cloud connectivity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Developers -->
+  <section class="py-20 bg-section-dark">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 section-header">Project Developers</h2>
+
+      <div class="max-w-5xl mx-auto space-y-8">
+        <!-- Developer 1 -->
+        <div class="feature-card card-hover">
+          <div class="flex flex-col md:flex-row p-8 md:p-10 items-center">
+            <div class="w-40 h-40 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center text-white text-6xl font-bold mb-6 md:mb-0 md:mr-10 shadow-2xl">
+              NH
+            </div>
+            <div class="flex-1 text-center md:text-left">
+              <h3 class="text-3xl font-bold mb-2">Habyarimana Noel</h3>
+              <p class="text-indigo-400 font-semibold text-xl mb-4">Project Developer & Electronics Specialist</p>
+              <p class="text-muted leading-relaxed mb-6">
+                Specialist in Electronics and Telecommunication including IoT, Web Development, Embedded Systems, and Industrial Automation
+              </p>
+              <div class="grid md:grid-cols-2 gap-3 text-sm text-muted mb-6">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-envelope text-indigo-400"></i>
+                  <span>habyarimananoel2@gmail.com</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-phone text-indigo-400"></i>
+                  <span>+250 791 894 694</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-map-marker-alt text-indigo-400"></i>
+                  <span>Kigali, Rwanda</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Developer 2 -->
+        <div class="feature-card card-hover">
+          <div class="flex flex-col md:flex-row p-8 md:p-10 items-center">
+            <div class="w-40 h-40 rounded-full bg-gradient-to-br from-green-400 to-teal-600 flex items-center justify-center text-white text-6xl font-bold mb-6 md:mb-0 md:mr-10 shadow-2xl">
+              TR
+            </div>
+            <div class="flex-1 text-center md:text-left">
+              <h3 class="text-3xl font-bold mb-2">Tuyishime Remy</h3>
+              <p class="text-green-400 font-semibold text-xl mb-4">Project Developer & Web Specialist</p>
+              <p class="text-muted leading-relaxed mb-6">
+                Web Developer and Programmer in Electronics and Telecommunication with a passion for project innovation and inspiration
+              </p>
+              <div class="grid md:grid-cols-2 gap-3 text-sm text-muted mb-6">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-envelope text-green-400"></i>
+                  <span>remytuyishime58@gmail.com</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-phone text-green-400"></i>
+                  <span>+250 798 285 063</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-map-marker-alt text-green-400"></i>
+                  <span>Kigali, Rwanda</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <div class="flex items-center mb-4">
+            <i class="fas fa-lightbulb text-2xl text-yellow-400 mr-2"></i>
+            <span class="text-xl font-bold">SmartLight</span>
+          </div>
+          <p class="text-gray-400">Building the future with embedded systems and IoT solutions</p>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Contact</h4>
+          <div class="space-y-2 text-gray-400">
+            <p class="flex items-center gap-2">
+              <i class="fas fa-envelope"></i>
+              <span>vtlabsgroup@gmail.com</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <i class="fas fa-phone"></i>
+              <span>+250 798 285 063</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <i class="fas fa-phone"></i>
+              <span>+250 722 388 780</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>KN 193 St, Kigali, Rwanda</span>
+            </p>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Project</h4>
+          <div class="space-y-2 text-gray-400">
+            <p>Smart Light Control</p>
+            <p>Energy Savings System</p>
+            <p>IoT Automation</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 VTLABS Group. All rights reserved. | Smart Light Control & Energy Savings System</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = 'all 0.6s ease-out';
+      observer.observe(card);
+    });
+  </script>
+
+</body>
+</html>
