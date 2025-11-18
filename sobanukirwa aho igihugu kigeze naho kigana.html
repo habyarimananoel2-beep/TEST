@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rwanda Government Announcements Portal - 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --rwanda-blue: #00a1de;
+            --rwanda-yellow: #fad201;
+            --rwanda-green: #20603d;
+            --rwanda-light: #e5f4f9;
+            --rwanda-dark: #1a3d2a;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray-light: #f8f9fa;
+            --gray-medium: #6c757d;
+            --gray-dark: #343a40;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--rwanda-blue) 0%, var(--rwanda-green) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rwanda-flag {
+            display: inline-block;
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(to bottom, var(--rwanda-blue) 50%, var(--rwanda-yellow) 50%, var(--rwanda-yellow) 75%, var(--rwanda-green) 75%);
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .rwanda-flag::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--rwanda-yellow);
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        .year-badge {
+            background: var(--rwanda-yellow);
+            color: var(--rwanda-dark);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, white 0%, var(--rwanda-light) 100%);
+        }
+
+        .hero h2 {
+            color: var(--rwanda-green);
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray-dark);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.8rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 1.2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--rwanda-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 161, 222, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--rwanda-blue) 0%, var(--rwanda-green) 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(42, 82, 152, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(42, 82, 152, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--rwanda-yellow) 0%, #e6b400 100%);
+            color: var(--rwanda-dark);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--rwanda-dark);
+            font-size: 0.9rem;
+        }
+
+        select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border 0.3s;
+            min-width: 180px;
+        }
+
+        select:focus {
+            border-color: var(--rwanda-blue);
+            outline: none;
+        }
+
+        .announcements-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.8rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            color: var(--rwanda-green);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        h2 i {
+            margin-right: 10px;
+            color: var(--rwanda-blue);
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .sort-label {
+            font-weight: 600;
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+
+        .announcements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .announcement-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid var(--rwanda-blue);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .announcement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .announcement-card.priority {
+            border-left-color: var(--rwanda-yellow);
+            background: #fff9e6;
+        }
+
+        .announcement-card.urgent {
+            border-left-color: var(--danger);
+            background: #f8d7da;
+        }
+
+        .announcement-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .announcement-title {
+            font-weight: bold;
+            color: var(--rwanda-dark);
+            font-size: 1.2rem;
+            line-height: 1.4;
+        }
+
+        .announcement-date {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            margin-left: 1rem;
+        }
+
+        .announcement-body {
+            color: #555;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .announcement-footer {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .announcement-category {
+            background: var(--rwanda-light);
+            color: var(--rwanda-blue);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .badge-priority {
+            background: var(--rwanda-yellow);
+            color: var(--rwanda-dark);
+        }
+
+        .badge-urgent {
+            background: var(--danger);
+            color: white;
+        }
+
+        .badge-new {
+            background: var(--success);
+            color: white;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover {
+            background: var(--rwanda-light);
+        }
+
+        .page-btn.active {
+            background: var(--rwanda-blue);
+            color: white;
+            border-color: var(--rwanda-blue);
+        }
+
+        .subscribe-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.8rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .subscribe-form {
+            display: flex;
+            max-width: 500px;
+            margin: 1rem auto 0;
+            gap: 10px;
+        }
+
+        .subscribe-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .subscribe-input:focus {
+            border-color: var(--rwanda-blue);
+            outline: none;
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.8rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--rwanda-light) 0%, #cde8f5 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--rwanda-blue);
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--rwanda-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--rwanda-dark);
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            color: white;
+            background: linear-gradient(135deg, var(--rwanda-blue) 0%, var(--rwanda-green) 100%);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .footer-section a:hover {
+            opacity: 0.8;
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .announcements-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .subscribe-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="rwanda-flag"></div>
+                <h1>Rwanda Government Announcements <span class="year-badge">2025</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">All Announcements</a></li>
+                    <li><a href="#">Priority Updates</a></li>
+                    <li><a href="#">Subscribe</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h2>Official Government Announcements Portal</h2>
+            <p>Stay informed with the latest updates, policies, and initiatives from the Government of Rwanda. Real-time information directly from official sources.</p>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search announcements...">
+                <button class="btn"><i class="fas fa-search"></i> Search</button>
+            </div>
+        </section>
+
+        <section class="search-section">
+            <h2><i class="fas fa-filter"></i> Filter Announcements</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <div class="filter-label">Ministry/Institution</div>
+                    <select id="institution-filter">
+                        <option value="all">All Institutions</option>
+                        <option value="presidency">Office of the President</option>
+                        <option value="primature">Office of the Prime Minister</option>
+                        <option value="minedu">Ministry of Education</option>
+                        <option value="minhealth">Ministry of Health</option>
+                        <option value="mininfra">Ministry of Infrastructure</option>
+                        <option value="minagric">Ministry of Agriculture</option>
+                        <option value="rdb">Rwanda Development Board</option>
+                        <option value="rra">Rwanda Revenue Authority</option>
+                        <option value="nisr">National Institute of Statistics</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">Category</div>
+                    <select id="category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="policy">Policy Changes</option>
+                        <option value="development">Development Projects</option>
+                        <option value="health">Health & Safety</option>
+                        <option value="education">Education</option>
+                        <option value="economic">Economic Updates</option>
+                        <option value="infrastructure">Infrastructure</option>
+                        <option value="agriculture">Agriculture</option>
+                        <option value="technology">Technology & Innovation</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">Time Period</div>
+                    <select id="time-filter">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">2025</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">Priority Level</div>
+                    <select id="priority-filter">
+                        <option value="all">All Priorities</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="priority">Priority</option>
+                        <option value="normal">Normal</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Reset Filters</button>
+        </section>
+
+        <section class="announcements-section">
+            <div class="section-header">
+                <h2><i class="fas fa-bullhorn"></i> Latest Announcements</h2>
+                <div class="sort-options">
+                    <span class="sort-label">Sort by:</span>
+                    <select id="sort-options">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="priority">Priority First</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="announcements-grid" id="announcements-container">
+                <!-- Announcements will be dynamically loaded here -->
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <h2><i class="fas fa-chart-bar"></i> Announcements Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="stat-value">247</div>
+                    <div class="stat-label">Total Announcements</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">Urgent Updates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Government Institutions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value">15,842</div>
+                    <div class="stat-label">Daily Visitors</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="subscribe-section">
+            <h2><i class="fas fa-bell"></i> Stay Updated</h2>
+            <p>Get the latest government announcements directly to your email or phone</p>
+            <form class="subscribe-form">
+                <input type="email" class="subscribe-input" placeholder="Your email address" required>
+                <button type="submit" class="btn btn-warning"><i class="fas fa-paper-plane"></i> Subscribe</button>
+            </form>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray-medium);">Or text <strong>ANNOUNCE</strong> to <strong>5050</strong> for SMS updates</p>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">All Announcements</a></li>
+                    <li><a href="#">Priority Updates</a></li>
+                    <li><a href="#">Archives</a></li>
+                    <li><a href="#">Government Institutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Download Mobile App</a></li>
+                    <li><a href="#">RSS Feeds</a></li>
+                    <li><a href="#">API for Developers</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> announcements@gov.rw</li>
+                    <li><i class="fas fa-phone"></i> +250 788 123 456</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Kigali, Rwanda</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <ul>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-youtube"></i> YouTube</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>Rwanda Government Announcements Portal &copy; 2025 | Official Platform of the Government of Rwanda</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample announcement data for 2025
+        const announcements = [
+            {
+                id: 1,
+                title: "Vision 2050 Public Consultations Begin",
+                date: "March 15, 2025",
+                body: "The government is developing Vision 2050, Rwanda's long-term development strategy. Public consultations will be held in all districts from April 1-30, 2025. Citizens are encouraged to participate and share their views on Rwanda's future development direction.",
+                institution: "Ministry of Finance & Economic Planning",
+                category: "policy",
+                priority: "priority",
+                views: 15432
+            },
+            {
+                id: 2,
+                title: "Digital ID Rollout Completion by June 2025",
+                date: "February 28, 2025",
+                body: "The national digital ID system rollout will be completed by June 2025. All citizens aged 16 and above are required to register. Registration centers are available in all sectors. The new digital ID will integrate with all government services.",
+                institution: "National Identification Agency",
+                category: "technology",
+                priority: "normal",
+                views: 22187
+            },
+            {
+                id: 3,
+                title: "Electric Vehicle Infrastructure Expansion",
+                date: "February 15, 2025",
+                body: "The government will install 200 new electric vehicle charging stations across the country by December 2025, as part of the Green Growth Strategy. This initiative supports Rwanda's transition to sustainable transportation.",
+                institution: "Ministry of Infrastructure",
+                category: "infrastructure",
+                priority: "normal",
+                views: 12543
+            },
+            {
+                id: 4,
+                title: "AI Integration in Public Services",
+                date: "January 30, 2025",
+                body: "Artificial Intelligence will be integrated into 10 key public services by Q3 2025 to improve efficiency and accessibility. Training programs for civil servants begin in April. The services include tax filing, business registration, and health consultations.",
+                institution: "Ministry of ICT & Innovation",
+                category: "technology",
+                priority: "priority",
+                views: 18765
+            },
+            {
+                id: 5,
+                title: "URGENT: Updated COVID-19 Vaccination Guidelines",
+                date: "March 10, 2025",
+                body: "The Ministry of Health has issued updated COVID-19 vaccination guidelines. All citizens aged 12 and above are encouraged to receive booster shots. Vaccination centers will operate extended hours throughout March.",
+                institution: "Ministry of Health",
+                category: "health",
+                priority: "urgent",
+                views: 28943
+            },
+            {
+                id: 6,
+                title: "Agriculture Season A Preparation Guidelines",
+                date: "February 5, 2025",
+                body: "The Ministry of Agriculture reminds farmers to prepare for Season A. Subsidized fertilizers will be available at sector offices starting next week. Extension officers will visit all districts to provide technical support.",
+                institution: "Ministry of Agriculture",
+                category: "agriculture",
+                priority: "normal",
+                views: 9876
+            },
+            {
+                id: 7,
+                title: "New Tax Incentives for Green Businesses",
+                date: "March 5, 2025",
+                body: "Rwanda Revenue Authority announces new tax incentives for businesses implementing environmentally friendly practices. Applications for the Green Business Certification open on April 1, 2025.",
+                institution: "Rwanda Revenue Authority",
+                category: "economic",
+                priority: "priority",
+                views: 13456
+            },
+            {
+                id: 8,
+                title: "Kigali Innovation City Phase 2 Launch",
+                date: "January 20, 2025",
+                body: "The second phase of Kigali Innovation City will launch in Q2 2025, featuring new research facilities and innovation hubs. The project aims to position Rwanda as a leading technology hub in Africa.",
+                institution: "Rwanda Development Board",
+                category: "technology",
+                priority: "normal",
+                views: 16789
+            }
+        ];
+
+        // Function to display announcements
+        function displayAnnouncements(announcementsToShow) {
+            const container = document.getElementById('announcements-container');
+            container.innerHTML = '';
+
+            if (announcementsToShow.length === 0) {
+                container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; padding: 2rem; color: var(--gray-medium);">No announcements match your filters. Try adjusting your search criteria.</p>';
+                return;
+            }
+
+            announcementsToShow.forEach(announcement => {
+                const card = document.createElement('div');
+                card.className = `announcement-card ${announcement.priority === 'urgent' ? 'urgent' : ''} ${announcement.priority === 'priority' ? 'priority' : ''}`;
+                
+                let badge = '';
+                if (announcement.priority === 'urgent') {
+                    badge = '<span class="badge badge-urgent">URGENT</span>';
+                } else if (announcement.priority === 'priority') {
+                    badge = '<span class="badge badge-priority">PRIORITY</span>';
+                }
+                
+                // Check if announcement is from the last 7 days
+                const announcementDate = new Date(announcement.date);
+                const today = new Date();
+                const diffTime = Math.abs(today - announcementDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays <= 7) {
+                    badge += '<span class="badge badge-new">NEW</span>';
+                }
+
+                card.innerHTML = `
+                    <div class="announcement-header">
+                        <div class="announcement-title">${announcement.title} ${badge}</div>
+                        <div class="announcement-date">${announcement.date}</div>
+                    </div>
+                    <div class="announcement-body">
+                        ${announcement.body}
+                    </div>
+                    <div class="announcement-footer">
+                        <span class="announcement-category">${announcement.institution}</span>
+                        <span><i class="fas fa-eye"></i> ${announcement.views.toLocaleString()} views</span>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Initial display of announcements
+        displayAnnouncements(announcements);
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredAnnouncements = announcements.filter(announcement => 
+                announcement.title.toLowerCase().includes(searchTerm) || 
+                announcement.body.toLowerCase().includes(searchTerm) ||
+                announcement.institution.toLowerCase().includes(searchTerm)
+            );
+            displayAnnouncements(filteredAnnouncements);
+        });
+
+        // Filter functionality
+        document.getElementById('institution-filter').addEventListener('change', applyFilters);
+        document.getElementById('category-filter').addEventListener('change', applyFilters);
+        document.getElementById('time-filter').addEventListener('change', applyFilters);
+        document.getElementById('priority-filter').addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            const institution = document.getElementById('institution-filter').value;
+            const category = document.getElementById('category-filter').value;
+            const timePeriod = document.getElementById('time-filter').value;
+            const priority = document.getElementById('priority-filter').value;
+
+            let filtered = announcements;
+
+            // Filter by institution
+            if (institution !== 'all') {
+                filtered = filtered.filter(announcement => 
+                    announcement.institution.toLowerCase().includes(institution)
+                );
+            }
+
+            // Filter by category
+            if (category !== 'all') {
+                filtered = filtered.filter(announcement => 
+                    announcement.category === category
+                );
+            }
+
+            // Filter by priority
+            if (priority !== 'all') {
+                filtered = filtered.filter(announcement => 
+                    announcement.priority === priority
+                );
+            }
+
+            displayAnnouncements(filtered);
+        }
+
+        // Sort functionality
+        document.getElementById('sort-options').addEventListener('change', function(e) {
+            const sortBy = e.target.value;
+            let sortedAnnouncements = [...announcements];
+
+            if (sortBy === 'newest') {
+                // For demo purposes, we're sorting by ID (higher ID = newer)
+                sortedAnnouncements.sort((a, b) => b.id - a.id);
+            } else if (sortBy === 'oldest') {
+                sortedAnnouncements.sort((a, b) => a.id - b.id);
+            } else if (sortBy === 'priority') {
+                const priorityOrder = { 'urgent': 1, 'priority': 2, 'normal': 3 };
+                sortedAnnouncements.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+            }
+
+            displayAnnouncements(sortedAnnouncements);
+        });
+
+        // Reset filters
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            document.getElementById('institution-filter').value = 'all';
+            document.getElementById('category-filter').value = 'all';
+            document.getElementById('time-filter').value = 'all';
+            document.getElementById('priority-filter').value = 'all';
+            document.querySelector('.search-input').value = '';
+            displayAnnouncements(announcements);
+        });
+
+        // Subscribe form
+        document.querySelector('.subscribe-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('.subscribe-input').value;
+            alert(`Thank you for subscribing! Notifications will be sent to ${email}`);
+            this.reset();
+        });
+
+        // Simulate real-time updates (for demo purposes)
+        setInterval(() => {
+            // Randomly update view counts to simulate activity
+            const randomAnnouncement = announcements[Math.floor(Math.random() * announcements.length)];
+            randomAnnouncement.views += Math.floor(Math.random() * 10) + 1;
+            
+            // Refresh display to show updated view counts
+            displayAnnouncements(announcements);
+        }, 10000);
+    </script>
+</body>
+</html>
